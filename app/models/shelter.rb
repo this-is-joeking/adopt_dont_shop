@@ -5,6 +5,7 @@ class Shelter < ApplicationRecord
 
   has_many :pets, dependent: :destroy
   has_many :applications, through: :pets
+  has_many :application_pets, through: :pets
 
   def self.order_by_recently_created
     order(created_at: :desc)
@@ -51,5 +52,9 @@ class Shelter < ApplicationRecord
 
   def num_of_adoptable_pets
     self.pets.where(adoptable: :true).size
+  end
+
+  def num_of_adopted_pets
+    self.application_pets.where(status: "Approved").size
   end
 end

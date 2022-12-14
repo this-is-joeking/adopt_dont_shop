@@ -4,6 +4,7 @@ RSpec.describe Shelter, type: :model do
   describe 'relationships' do
     it { should have_many(:pets) }
     it { should have_many(:applications).through(:pets) }
+    it { should have_many(:application_pets).through(:pets) }
   end
 
   describe 'validations' do
@@ -122,6 +123,21 @@ RSpec.describe Shelter, type: :model do
     it 'returns the number of adoptable pets for a given shelter' do
       expect(@shelter_1.num_of_adoptable_pets).to eq(2)
       expect(@shelter_3.num_of_adoptable_pets).to eq(1)
+    end
+  end
+
+  describe '#num_of_adopted_pets' do
+    it 'returns the number of adopted pets for a given shelter' do
+
+      application = @pet_4.applications.create!(name: 'John Smith', street: '123 N Central Ave.', city: 'Denver', state: 'Colorado', zip: '91234', applicant_argument: 'caring and loving', app_status: "Pending")
+      application.pets << @pet_2
+      application.application_pets.each do |app_pet|
+        app_pet.approve
+      end
+      application.accept_application
+      
+      expect(@shelter_1.num_of_adopted_pets).to eq(2)
+      expect(@shelter_3.num_of_adopted_pets).to eq(0)
     end
   end
 end
