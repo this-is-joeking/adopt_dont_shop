@@ -17,8 +17,6 @@ class Admin::ApplicationsController < ApplicationController
       @application_pet = ApplicationPet.find(params[:app_pet_id])
       if params[:pet_id]
         @application_pet.approve
-        pet = Pet.find(params[:pet_id])
-        pet.adopt
       elsif params[:reject_pet_id]
         @application_pet.reject
       end

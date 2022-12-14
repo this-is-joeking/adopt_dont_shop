@@ -4,6 +4,7 @@ class ApplicationPet < ApplicationRecord
 
   def approve
     update(status: "Approved")
+    pet.adopt
   end
 
   def reject
