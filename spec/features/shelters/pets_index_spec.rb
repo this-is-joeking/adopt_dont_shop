@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'time'
 
 RSpec.describe 'the shelters pets index' do
   before(:each) do

@@ -1,4 +1,5 @@
-<h1>Application</h1>
+<%= render partial: "/admin/header", locals: {heading: "#{@application.name}'s Application"} %>
+
 <p>Name: <%= @application.name %></p>
 <p>Address: <%= "#{ @application.street }" %>
 <%= "#{@application.city}, #{ @application.state }   #{ @application.zip }" %></p>

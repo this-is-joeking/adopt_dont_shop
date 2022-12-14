@@ -1,2 +1,2 @@
-<h1><%= @shelter.name %><h1>
+<%= render partial: "/admin/header", locals: {heading: @shelter.name} %>
 <p>Full Address: <%= "#{@shelter.street}, #{@shelter.city}, #{@shelter.state}, #{@shelter.zip}" %>
