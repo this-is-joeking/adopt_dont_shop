@@ -1,2 +1,5 @@
-<%= render partial: "/admin/header", locals: {heading: @shelter.name} %>
-<p>Full Address: <%= "#{@shelter.street}, #{@shelter.city}, #{@shelter.state}, #{@shelter.zip}" %>
+<%= render partial: "/admin/header", locals: {heading: @shelter_name_address.name} %>
+<p>Full Address: <%= "#{@shelter_name_address.street}, #{@shelter_name_address.city}, #{@shelter_name_address.state}, #{@shelter_name_address.zip}" %>
+
+<h3>Shelter Statistics:</h3>
+<p>Average adoptable pet age: <%= @avg_pet_age %></p>

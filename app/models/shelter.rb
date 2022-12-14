@@ -44,4 +44,8 @@ class Shelter < ApplicationRecord
   def self.find_name_and_address(shelter_id)
     self.all.find_by_sql("Select name, street, city, state, zip FROM shelters WHERE id = #{shelter_id}").first
   end
+
+  def avg_pet_age
+    self.pets.where(adoptable: :true).average(:age)
+  end
 end
