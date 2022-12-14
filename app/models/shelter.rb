@@ -48,4 +48,8 @@ class Shelter < ApplicationRecord
   def avg_pet_age
     self.pets.where(adoptable: :true).average(:age)
   end
+
+  def num_of_adoptable_pets
+    self.pets.where(adoptable: :true).size
+  end
 end
