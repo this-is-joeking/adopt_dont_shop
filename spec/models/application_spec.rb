@@ -24,27 +24,6 @@ RSpec.describe Application, type: :model do
     end
   end
 
-  describe '#order_app_pets_by_pets' do
-    it 'aligns order of application pets with order of pets' do
-      shelter = Shelter.create!(name: 'Mystery Building', city: 'Irvine CA', foster_program: false, rank: 9)
-      pet = Pet.create!(name: 'Scooby', age: 2, breed: 'Great Dane', adoptable: true, shelter_id: shelter.id)
-      pet2 = Pet.create!(name: 'Scrappy', age: 2, breed: 'Terrior', adoptable: true, shelter_id: shelter.id)
-      application = pet.applications.create!(name: 'John Doe', street: '123 N Washington Ave.', city: 'Denver', state: 'Colorado', zip: '91234', applicant_argument: 'caring and loving', app_status: "Pending")
-      application.pets << pet2
-
-      ordered_app_pets = application.order_app_pets_by_pets
-      
-      expect(ordered_app_pets).to eq(application.application_pets)
-
-      application.application_pets.second.reject
-      application.application_pets.first.reject
-
-      still_ordered_app_pets = application.order_app_pets_by_pets
-
-      expect(ordered_app_pets).to eq(still_ordered_app_pets)
-    end
-  end
-
   describe '#uniq_app_pets_status' do
     it 'returns array of unique application pet statuses for the application' do
       shelter = Shelter.create!(name: 'Mystery Building', city: 'Irvine CA', foster_program: false, rank: 9)
@@ -88,6 +67,39 @@ RSpec.describe Application, type: :model do
       expect(application.app_status).to eq("Pending")
 
       application.reject_application
+
+      expect(application.app_status).to eq("Rejected")
+    end
+  end
+
+  describe '#update_app_status' do
+    it 'updates app status to approved if all app pets approved' do
+      shelter = Shelter.create!(name: 'Mystery Building', city: 'Irvine CA', foster_program: false, rank: 9)
+      pet = Pet.create!(name: 'Scooby', age: 2, breed: 'Great Dane', adoptable: true, shelter_id: shelter.id)
+      application = pet.applications.create!(name: 'John Doe', street: '123 N Washington Ave.', city: 'Denver', state: 'Colorado', zip: '91234', applicant_argument: 'caring and loving', app_status: "Pending")
+      application.update_app_status
+      
+      expect(application.app_status).to eq("Pending")
+
+      application.application_pets.first.approve
+      application.update_app_status
+
+      expect(application.app_status).to eq("Approved")
+    end
+
+    it 'updates app status to rejected if any app pet is rejected and none are pending' do
+      shelter = Shelter.create!(name: 'Mystery Building', city: 'Irvine CA', foster_program: false, rank: 9)
+      pet1 = Pet.create!(name: 'Scooby', age: 2, breed: 'Great Dane', adoptable: true, shelter_id: shelter.id)
+      application = pet1.applications.create!(name: 'John Doe', street: '123 N Washington Ave.', city: 'Denver', state: 'Colorado', zip: '91234', applicant_argument: 'caring and loving', app_status: "Pending")
+      pet2 = Pet.create!(name: 'Scrappy', age: 2, breed: 'Great Dane', adoptable: true, shelter_id: shelter.id)
+      application.pets << pet2
+      application.application_pets.first.approve
+      application.update_app_status
+
+      expect(application.app_status).to eq("Pending")
+
+      application.application_pets.second.reject
+      application.update_app_status
 
       expect(application.app_status).to eq("Rejected")
     end

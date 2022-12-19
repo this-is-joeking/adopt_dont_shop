@@ -62,7 +62,7 @@ RSpec.describe 'admin application show' do
     application1.pets << pet2
 
     visit "/admin/applications/#{ application1.id }"
-    
+
     within("div##{pet1.id}") do
       click_button("Reject")
       expect(page).to have_content("Rejected")
