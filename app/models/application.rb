@@ -12,13 +12,9 @@ class Application < ApplicationRecord
   def adopt_pet(pet)
     self.pets << pet
   end
-
-  def order_app_pets_by_pets
-    pets.map { |pet| ApplicationPet.find_by_pet_and_app(pet.id, self.id) }
-  end
-
+  
   def uniq_app_pets_status
-    order_app_pets_by_pets.pluck(:status).uniq
+    application_pets.pluck(:status).uniq
   end
 
   def accept_application
@@ -27,5 +23,13 @@ class Application < ApplicationRecord
 
   def reject_application
     self.update(app_status: "Rejected")
+  end
+
+  def update_app_status
+    if self.uniq_app_pets_status == ["Approved"]
+      self.accept_application
+    elsif !self.uniq_app_pets_status.include?("Pending")
+      self.reject_application
+    end
   end
 end
