@@ -1,21 +1,22 @@
+# frozen_string_literal: true
+
 class ApplicationsController < ApplicationController
   def show
     @application = Application.find(params[:application_id])
     @pets = @application.pets
-    if params[:pet_search].present?
-      @searched_pets = Pet.search(params[:pet_search])
-    else
-      @searched_pets = []
-    end
+    @searched_pets = if params[:pet_search].present?
+                       Pet.search(params[:pet_search])
+                     else
+                       []
+                     end
 
-    if params[:pet].present?
-      pet = Pet.find(params[:pet])
-      @application.adopt_pet(pet)
-    end
+    return unless params[:pet].present?
+
+    pet = Pet.find(params[:pet])
+    @application.adopt_pet(pet)
   end
 
   def new
-
   end
 
   def update
@@ -29,12 +30,13 @@ class ApplicationsController < ApplicationController
     if @application.save
       redirect_to "/applications/#{@application.id}"
     else
-      flash[:notice] = "Application not created. Please fill out all fields."
+      flash[:notice] = 'Application not created. Please fill out all fields.'
       render :new
     end
   end
 
-private 
+  private
+
   def app_params
     params.permit(:name, :street, :city, :zip, :state, :applicant_argument, :app_status)
   end

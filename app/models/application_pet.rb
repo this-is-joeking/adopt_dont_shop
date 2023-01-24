@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 class ApplicationPet < ApplicationRecord
   belongs_to :application
   belongs_to :pet
 
   def approve
-    update(status: "Approved")
+    update(status: 'Approved')
     pet.adopt
   end
 
   def reject
-    update(status: "Rejected")
+    update(status: 'Rejected')
   end
 
   def self.find_by_pet_and_app(arg_pet_id, arg_application_id)

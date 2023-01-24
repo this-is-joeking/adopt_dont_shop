@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Shelter < ApplicationRecord
   validates :name, presence: true
   validates :rank, presence: true, numericality: true
@@ -12,10 +14,10 @@ class Shelter < ApplicationRecord
   end
 
   def self.order_by_number_of_pets
-    select("shelters.*, count(pets.id) AS pets_count")
-      .joins("LEFT OUTER JOIN pets ON pets.shelter_id = shelters.id")
-      .group("shelters.id")
-      .order("pets_count DESC")
+    select('shelters.*, count(pets.id) AS pets_count')
+      .joins('LEFT OUTER JOIN pets ON pets.shelter_id = shelters.id')
+      .group('shelters.id')
+      .order('pets_count DESC')
   end
 
   def pet_count
@@ -33,13 +35,13 @@ class Shelter < ApplicationRecord
   def shelter_pets_filtered_by_age(age_filter)
     adoptable_pets.where('age >= ?', age_filter)
   end
-  
+
   def self.sort_reverse_alpha
-    self.all.find_by_sql("SELECT * FROM shelters ORDER BY name desc")
+    self.all.find_by_sql('SELECT * FROM shelters ORDER BY name desc')
   end
 
   def self.pending
-    self.distinct.joins(:applications).where("applications.app_status = ?", "Pending").order(:name)
+    self.distinct.joins(:applications).where('applications.app_status = ?', 'Pending').order(:name)
   end
 
   def self.find_name_and_address(shelter_id)
@@ -47,14 +49,14 @@ class Shelter < ApplicationRecord
   end
 
   def avg_pet_age
-    self.pets.where(adoptable: :true).average(:age)
+    self.pets.where(adoptable: true).average(:age)
   end
 
   def num_of_adoptable_pets
-    self.pets.where(adoptable: :true).size
+    self.pets.where(adoptable: true).size
   end
 
   def num_of_adopted_pets
-    self.application_pets.where(status: "Approved").size
+    self.application_pets.where(status: 'Approved').size
   end
 end
